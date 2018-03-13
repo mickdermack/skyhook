@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
 const winston = require('winston');
+const process = require('process');
 
 let app = express();
 const providers = {
@@ -62,10 +63,26 @@ app.get("/api/webhooks/:webhookID/:webhookSecret/:from", function (req, res) {
     }
 });
 
-app.post("/api/webhooks/:webhookID/:webhookSecret/:from", async function (req, res) {
+app.post("/api/webhooks/:reqSecret/:webhookID/:webhookSecret/:from", async function (req, res) {
     let webhookID = req.params.webhookID;
     let webhookSecret = req.params.webhookSecret;
     let provider = req.params.from;
+
+    let serverSecret = process.env.SKYHOOK_SECRET;
+    let reqSecret = req.params.reqSecret;
+
+    if (!serverSecret) {
+        winston.log("SKYHOOK_SECRET not set");
+        res.sendStatus(500);
+        return;
+    }
+
+    if (reqSecret !== serverSecret) {
+        winston.log("Request not authenticated");
+        req.sendStatus(403);
+        return;
+    }
+
     const test = req.get("test");
     if (!webhookID || !webhookSecret || !provider) {
         res.sendStatus(400);
