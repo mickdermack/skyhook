@@ -22,10 +22,6 @@ class DiscordPayload {
             this.data.embeds = [];
         }
 
-        data.footer = {
-            text: "Powered by Skyhook",
-            icon_url: ""
-        };
         if (this.embedColor !== null) {
             data.color = this.embedColor;
         }
