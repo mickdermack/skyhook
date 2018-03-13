@@ -43,14 +43,14 @@ class GitLab extends BaseProvider {
             const message = (commit.message.length > 256) ? commit.message.substring(0, 255) + "\u2026" : commit.message;
 
             commits.push({
-                name: "Commit from " + commit.author.name,
+                name: commit.author.name,
                 value: "(" + "[`" + commit.id.substring(0, 7) + "`](" + commit.url + ")" + ") " + (message == null ? "" : message.replace(/\n/g, " ").replace(/\r/g, " ")),
                 inline: false
             });
         }
 
         this.payload.addEmbed({
-            title: "[" + project.name + ":" + project.branch + "] " + project.commits.length + " commit" + ((project.commits.length > 1) ? "s" : ""),
+            title: "Pushed " + project.commits.length + " commit" + ((project.commits.length > 1) ? "s" : "") + " to branch " + project.branch,
             url: project.url,
             author: {
                 name: this.body.user_name,
