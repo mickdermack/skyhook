@@ -192,6 +192,13 @@ class GitLab extends BaseProvider {
 
 
     async pipeline() {
+        const status = this.body.object_attributes.status;
+        if (status === "pending" || status === "running") {
+            // Hack to cancel sending message
+            this.payload.data = null;
+            return;
+        }
+
         this.payload.addEmbed({
             title: "Pipeline #" + this.body.object_attributes.id + " on " + this.body.project.name,
             url: this.body.project.web_url + "/pipelines/" + this.body.object_attributes.id,
