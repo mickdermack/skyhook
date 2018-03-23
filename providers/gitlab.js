@@ -200,7 +200,7 @@ class GitLab extends BaseProvider {
         }
 
         this.payload.addEmbed({
-            title: "Pipeline #" + this.body.object_attributes.id + " on " + this.body.project.name,
+            title: "Pipeline #" + this.body.object_attributes.id + " on branch " + this.body.object_attributes.ref,
             url: this.body.project.web_url + "/pipelines/" + this.body.object_attributes.id,
             author: {
                 name: this.body.user.name,
