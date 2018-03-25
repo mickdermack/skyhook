@@ -49,15 +49,23 @@ class GitLab extends BaseProvider {
             });
         }
 
-        this.payload.addEmbed({
-            title: "Pushed " + project.commits.length + " commit" + ((project.commits.length > 1) ? "s" : "") + " to branch " + project.branch,
-            url: project.url,
+        let embed = {
             author: {
                 name: this.body.user_name,
                 icon_url: GitLab._formatAvatarURL(this.body.user_avatar)
             },
             fields: commits
-        });
+        };
+
+        if (this.body.after !== "0000000000000000000000000000000000000000") {
+            embed.title = "Pushed " + project.commits.length + " commit" + ((project.commits.length != 1) ? "s" : "") + " to branch " + project.branch;
+            embed.url = project.url + "/tree/" + project.branch;
+        } else {
+            embed.title = "Deleted branch " + project.branch;
+            embed.url = project.url;
+        }
+
+        this.payload.addEmbed(embed);
     }
 
     async tagPush() {
